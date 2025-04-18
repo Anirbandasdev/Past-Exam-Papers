@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "all_exam_papers",
+  "info": {
+    "singularName": "all-exam-paper",
+    "pluralName": "all-exam-papers",
+    "displayName": "All Exam Paper"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "File": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
+    },
+    "subject": {
+      "type": "string",
+      "required": true
+    },
+    "academic_year": {
+      "type": "biginteger"
+    }
+  }
+}
