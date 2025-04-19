@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Futuristic Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="stylesheet" href="/src/account.css">
+</head>
+<body>
+  <div class="login-page" id="loginPage">
+    <!-- From Uiverse.io by nathann09 --> 
+
+    <form class="login-form sign-in">
+      <p class="form-title">Sign in to your account</p>
+       <div class="input-container">
+         <input type="email" placeholder="Enter email">
+         <span>
+         </span>
+     </div>
+     <div class="input-container">
+         <input type="password" placeholder="Enter password">
+       </div>
+        <button type="submit" class="submit">
+       Sign in
+     </button>
+
+     <p class="signup-link">
+       No account?
+       <a href="">Sign up</a>
+     </p>
+  </form>
+  <form class="login-form sign-up">
+    <p class="form-title">Sign up to your account</p>
+    <div class="input-container">
+       <input type="text" placeholder="Enter name" id="username">
+       <span>
+       </span>
+     <div class="input-container">
+       <input type="email" placeholder="Enter email">
+       <span>
+       </span>
+   </div>
+   <div class="input-container">
+       <input type="password" placeholder="Enter password">
+     </div>
+      <button type="submit" class="submit">
+     Sign in
+   </button>
+
+   <p class="signin-link">
+     All Ready have an account?
+     <a href="">Sign in</a>
+   </p>
+</form>
+
+
+  </div>
+
+  <div class="main" style="display: none" id="mainPage">
+    <div class="topbar">
+      <div class="logo-placeholder">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <span>MyPlatform</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button onclick="logout()" style="background:#e53935; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">Logout</button>
+        <div class="user-logo" id="userLogo">A</div>
+      </div>
+    </div>
+    <div style="display: flex; flex: 1">
+      <div class="sidebar" id="sidebar">
+        <button onclick="showPage('dashboard')">📊 <span>Dashboard</span></button>
+        <button onclick="showPage('profile')">👤 <span>Profile</span></button>
+        <button onclick="showPage('career')">🎯 <span>Career Support</span></button>
+        <button onclick="showPage('help')">📞 <span>Help Line</span></button>
+        <button onclick="showPage('chatbot')">🤖 <span>AI Chatbot</span></button>
+      </div>
+      <div class="content" id="content">
+        <h2>Welcome to your Dashboard</h2>
+        <p>Select an option from the left menu.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleLoginForm() {
+      const signInForm = document.querySelector(".sign-in");
+      const signUpForm = document.querySelector(".sign-up");
+      signInForm.classList.toggle("hidden");
+      signUpForm.classList.toggle("hidden");
+    }
+    document.querySelector(".sign-up").classList.add("hidden");
+    document.querySelector(".signup-link a").addEventListener("click", (e) => {
+      e.preventDefault();
+      toggleLoginForm();
+    });
+    document.querySelector(".signin-link a").addEventListener("click", (e) => {
+      e.preventDefault();
+      toggleLoginForm();
+    });
+    document.querySelector(".sign-in .submit").addEventListener("click", (e) => {
+      e.preventDefault();
+      login();
+    });
+    function login() {
+      const name = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!name || !email || !password) {
+        alert("Please fill in all fields.");
+        return;
+      }
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        return;
+      }
+
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userPassword", password);
+
+      document.getElementById("loginPage").style.display = "none";
+      loadDashboard();
+    }
+
+    function loadDashboard() {
+      const name = localStorage.getItem("userName");
+      if (name) {
+        document.getElementById("mainPage").style.display = "flex";
+        document.getElementById("userLogo").textContent = name[0].toUpperCase();
+        showPage('dashboard');
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      document.getElementById("mainPage").style.display = "none";
+      document.getElementById("loginPage").style.display = "flex";
+    }
+
+    function showPage(page) {
+      const content = document.getElementById("content");
+      if (page === "dashboard") {
+        content.innerHTML = `
+          <h2>Dashboard</h2>
+          <div class="card-container">
+            <div class="card">User Name: ${localStorage.getItem("userName")}</div>
+            <div class="card">Email: ${localStorage.getItem("userEmail")}</div>
+            <div class="card">Last Login: ${new Date().toLocaleString()}</div>
+            <div class="card">Status: Active</div>
+          </div>
+        `;
+      } else if (page === "profile") {
+        content.innerHTML = `
+          <h2>Profile Settings</h2>
+          <p>Coming soon: user can change preferences here.</p>
+        `;
+      } else if (page === "career") {
+        content.innerHTML = `<h2>Career Support</h2><p>Find job support and resources here.</p>`;
+      } else if (page === "help") {
+        content.innerHTML = `<h2>Help Line</h2><p>Contact our help line for assistance.</p>`;
+      } else if (page === "chatbot") {
+        content.innerHTML = `
+          <h2>AI Chatbot</h2>
+          <iframe src="https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2025/04/19/10/20250419101127-MV6UP6MA.json"></iframe>
+        `;
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("collapsed");
+    }
+
+    window.onload = () => {
+      if (localStorage.getItem("userName")) {
+        loadDashboard();
+      }
+    };
+  </script>
+</body>
+</html>
